@@ -77,14 +77,17 @@
         <div class="container">
             <div class="row">
 
-                <!-- FOREACH   start         -->
                 <!-- Single Product Start -->
-                <div class="col-lg-3 col-sm-6">
+                <div 
+                class="col-lg-3 col-sm-6"
+                v-for="item in top"
+                :key="item.id"
+                >
                     <div class="single-product">
                         <!-- Product Image Start -->
                         <div class="pro-img">
                             <a href="#">
-                                <img class="primary-img" src="img/products/l#.jpg" alt="single-product">
+                                <img class="primary-img" :src="'img/products/l'+ item.vendor +'.jpg'" alt="single-product">
                             </a>
                         </div>
                         <!-- Product Image End -->
@@ -94,13 +97,17 @@
                                 <!-- тут был рейтинг -->
                             </div>
                             <h4>Сезонный товар</h4>
-                            <h4> <a href="#">ТУТ НАЗВАНИЕ ТОВРА</a></h4>
+                            <h4> <a href="#">{{ item.item }}</a></h4>
                             <p>
-                                <span class="price"> 0000 р.</span>
+                                <span class="price"> {{ item.price }} р.</span>
 
-                                <?php  if ($product->price < $product->old_price): ?>
-                                <del class="prev-price"><?= $product->old_price ?>р.</del>
-                                <?php endif ?>
+                               
+                                <del 
+                                v-if = "item.price < item.old_price"
+                                class="prev-price">
+                                {{item.old_price}}р.
+                                </del>
+                                
                             </p>
                             <div class="pro-actions">
                                 <div class="actions-secondary">
@@ -114,7 +121,7 @@
                     </div>
                 </div>
                 <!-- Single Product End -->
-                <!-- FOREACH   END        -->
+              
 
 
             </div>
@@ -213,6 +220,25 @@
 
 <script>
     export default {
+        data(){
+            return{
+                top:null,
+                resource:null
+            }
+        },
+        methods:{
+           
+        },
+        created(){
+          this.resource = this.$resource('items/gettop')
+          .get().then(res => res.json()).then(items => {
+              items.map( item =>{
+                  //убираем из vendor все  /
+                  return item.vendor = item.vendor.replace(new RegExp("/",'g'),"")
+              })
+              this.top = items})
+         
+        }
 
     }
 </script>

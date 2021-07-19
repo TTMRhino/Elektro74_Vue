@@ -233,7 +233,7 @@
           this.resource = this.$resource('items/gettop')
           .get().then(res => res.json()).then(items => {
               items.map( item =>{
-                  //убираем из vendor все  /
+                  //убираем из vendor все  "/"
                   return item.vendor = item.vendor.replace(new RegExp("/",'g'),"")
               })
               this.top = items})

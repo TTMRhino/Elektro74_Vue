@@ -18,6 +18,14 @@ const Contacts = resolve => {
         )
     })
 }
+
+const Shop = resolve => {
+    require.ensure(['./pages/Shop.vue'], () => {
+        resolve(
+            require('./pages/Shop.vue')
+        )
+    })
+}
 export default new VueRouter({
     routes: [{
             path: '/',
@@ -30,6 +38,10 @@ export default new VueRouter({
         {
             path: '/contacts',
             component: Contacts
+        },
+        {
+            path: '/shop',
+            component: Shop
         }
     ],
     mode: 'history'

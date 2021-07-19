@@ -59,7 +59,7 @@
 
                                         </li>
                                         <li><router-link to="/about">О нас</router-link></li>
-                                        <li><router-link to="#">Товары<i class="fa"></i></router-link></li>
+                                        <li><router-link to="/shop">Товары<i class="fa"></i></router-link></li>
 
 
                                         <li><router-link to="/contacts">Контакты</router-link></li>
@@ -100,7 +100,7 @@
                                 <nav>
                                     <ul>
                                         <li><router-link to="/">Домой</router-link></li>
-                                        <li><router-link to="/shop/index">Товары</router-link></li>
+                                        <li><router-link to="/shop">Товары</router-link></li>
                                         <li><router-link to="/about">О Нас</router-link></li>                                        
                                         <li><router-link to="/contacts">Контакты</router-link></li>
                                     </ul>

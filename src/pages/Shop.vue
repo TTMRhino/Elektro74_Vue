@@ -16,14 +16,19 @@
                     <div class="group-title">
                         <h2>categories</h2>
                     </div>
-                    <ul v-for="mGroup in mainGroup" :key="mGroup.id">
-                        <ul class="middle-menu-list menuSideBar">
+                    <ul >
+                        <ul class="middle-menu-list menuSideBar"
+                        v-for="mGroup in MainGroup" :key="mGroup.id"
+                        >
+                     
                             <li>
-                                <a href="">
-                                    {{mGroup.title}}<i class="fa fa-angle-down"></i>
-                                </a>
+                                <a href=""> {{mGroup.title}} <i class="fa fa-angle-down"></i> </a>
+
                                 <ul class="ht-dropdown dropdown-style-one">
-                                    <li> <a href="/shop/index?subgroup_id=3">Дренажные</a></li>
+                                    <li
+                                     v-for="sGroup in mGroup.subGroup"
+                                    :key="sGroup.id"
+                                    > <a href="/shop/index?subgroup_id=3">{{ sGroup.title  }}</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -106,15 +111,19 @@
                                 <div id="grid-view" class="tab-pane ">
 
                                     <div class="row">
+
                                         <!-- START FOREACH  ITEMS -->
                                             <!-- Single Product Start -->                    
-                                            <div class="col-lg-4 col-sm-6">
+                                            <div 
+                                              class="col-lg-4 col-sm-6"
+                                              v-for="item in items"
+                                              :key="item.id"
+                                            >
                                                 <div class="single-product">
                                                     <!-- Product Image Start -->
                                                     <div class="pro-img">
                                                         <a href="#">
-                                                            <img class="primary-img" src="/img/products/l #.jpg" alt="#">
-                                                            <!--<img class="secondary-img" src="/img/products/2.jpg" alt="<?=$item->item ?>">-->
+                                                            <img class="primary-img" :src="'/img/products/l'+ item.vendor +'.jpg'" alt="#">                                                           
                                                         </a>
                                                     </div>
                                                     <!-- Product Image End -->
@@ -127,11 +136,11 @@
                                                             <i class="fa fa-star"></i>
                                                             <i class="fa fa-star"></i>
                                                         </div>                                
-                                                        <h4><a href="<?= Url::to(['product/view', 'vendor' => $item->vendor]) ?>"> $item->item </a></h4>
+                                                        <h4><a href="<?= Url::to(['product/view', 'vendor' => $item->vendor]) ?>"> {{ item.item }} </a></h4>
                                                         <p>
-                                                            <span class="price">Price р.</span>
+                                                            <span class="price">{{ item.price }} р.</span>
                                                               
-                                                                    <del class="prev-price">old_price р.</del>
+                                                                    <del class="prev-price"> {{ item.old_price }} р.</del>
                                                                 
                                                         </p>
                                                         <div class="pro-actions">
@@ -165,11 +174,14 @@
                                 <div id="list-view" class="tab-pane active">
 
                                     <!-- START FOREACH ITEMS -->
-                                        <div class="single-product">
+                                        <div class="single-product"
+                                            v-for="item in items"
+                                            :key="item.id"
+                                        >
                                             <!-- Product Image Start -->
                                             <div class="pro-img">
                                                 <a href="#">
-                                                    <img class="primary-img" src="/img/products/l#.jpg" alt="#">
+                                                    <img class="primary-img" :src="'/img/products/l'+ item.vendor +'.jpg'" alt="#">
                                                     <!--<img class="secondary-img" src="/img/products/2.jpg" alt="">-->
                                                 </a>
                                             </div>
@@ -183,11 +195,11 @@
                                                     <i class="fa fa-star"></i>
                                                     <i class="fa fa-star"></i>
                                                 </div>                                
-                                                <h4><a href="#"> $item </a></h4>
+                                                <h4><a href="#">{{ item.item}} </a></h4>
                                                 <p>
-                                                    <span class="price"> price р.</span>
+                                                    <span class="price"> {{ item.price }} р.</span>
                                                    
-                                                        <del class="prev-price">old_priceр.</del>
+                                                        <del class="prev-price"> {{ item.old_price }}р.</del>
                                                    
                                                     
                                                 </p>
@@ -250,20 +262,29 @@
 </template>
 <script>
 export default {
-     data(){
-            return{
-                mainGroup:null,
-                subGroup:null,
-                resource:null
-            }
-        },
+    
         methods:{
            
         },
+        computed:{
+            items(){
+                return  this.$store.getters.items
+            },
+            MainGroup(){
+                 console.log( this.$store.getters.itemsCount) 
+                return this.$store.getters.MainGroup
+            }
+          
+        },
         created(){
-            this.resource = this.$resource('maingroup')
-          .get().then(res => res.json()).then(mainGroup => {              
-              this.mainGroup = mainGroup})
+
+            this.$store.dispatch('asyncGetMainGroup')
+
+            //обращаемся в store для вытягиваия items через API
+             this.$store.dispatch('asyncGetItems') 
+               
+             
         }
+                
 }
 </script>

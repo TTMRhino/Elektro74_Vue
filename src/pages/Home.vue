@@ -80,7 +80,7 @@
                 <!-- Single Product Start -->
                 <div 
                 class="col-lg-3 col-sm-6"
-                v-for="item in top"
+                v-for="item in top.items"
                 :key="item.id"
                 >
                     <div class="single-product">
@@ -222,21 +222,29 @@
     export default {
         data(){
             return{
-                top:null,
+               // top:null,
                 resource:null
             }
         },
         methods:{
            
         },
+        computed:{
+            top(){
+               // console.log(this.$store.getters.top)
+                return this.$store.getters.top
+            }
+        },
         created(){
-          this.resource = this.$resource('items/gettop')
+         /* this.resource = this.$resource('items/gettop')
           .get().then(res => res.json()).then(items => {
-              items.map( item =>{
+              items.items.map( item =>{
                   //убираем из vendor все  "/"
                   return item.vendor = item.vendor.replace(new RegExp("/",'g'),"")
               })
-              this.top = items})
+              this.top = items})*/
+              this.$store.dispatch('asyncGetTop')
+              //console.log(this.top)
          
         }
 

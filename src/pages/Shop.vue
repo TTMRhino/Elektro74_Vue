@@ -22,13 +22,15 @@
                         >
                      
                             <li>
-                                <a href=""> {{mGroup.title}} <i class="fa fa-angle-down"></i> </a>
+                                <button class="btn btn-link"
+                                 @click="getItemsByMaingroup(mGroup.id)"> 
+                                 {{mGroup.title}} <i class="fa fa-angle-down"></i> </button>
 
                                 <ul class="ht-dropdown dropdown-style-one">
                                     <li
                                      v-for="sGroup in mGroup.subGroup"
                                     :key="sGroup.id"
-                                    > <a href="/shop/index?subgroup_id=3">{{ sGroup.title  }}</a></li>
+                                    > <a class="btn btn-link" >{{ sGroup.title  }}</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -236,32 +238,8 @@
                                         
                                         
                            <!-- PAGINATION -->
-                               <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                        <button  class="page-link " :disabled="currentPage <= 1"  aria-label="Previous" @click="movePage(--currentPage )">
-                                            <span aria-hidden="true">&laquo;</span>
-                                            <span class="sr-only">Previous</span>
-                                        </button>
-                                        </li>
-
-                                        <li class="page-item " 
-                                            v-for="page in fromToArr(currentPage,currentPage+5)" 
-                                            :key="page"
-                                            :class="{active:currentPage == page}"
-                                            >
-                                            <button class="page-link" @click="movePage(page)">{{page}}</button>
-                                        </li>
-                                        
-
-                                        <li class="page-item">
-                                        <button class="page-link"  :disabled="currentPage >= pageCount" aria-label="Next" @click="movePage(++currentPage )">
-                                            <span aria-hidden="true">&raquo;</span>
-                                            <span class="sr-only" >Next</span>
-                                        </button>
-                                        </li>
-                                    </ul>
-                                </nav>
+                               
+                                <paginations></paginations>
                            
 
                             <div class="toolbar-sorter-footer">
@@ -286,50 +264,26 @@
     </div>
 </template>
 <script>
-export default {
-    data(){
-        return{
-            currentPage:1,           
-           
-        }
-    },
-    
-        methods:{
-            //переход на конкретную стр.
-           movePage:function(page){
-               this.currentPage = page
-                this.$store.dispatch('asyncGetItems',page)
-           },
-           //формируем ограниченную пагинацию (выводим не все 30 стр а только по 6 шт.)
-           fromToArr(start,end){
-               if(end > this.pageCount){
-                   end = this.pageCount
-               }
-                let arr=[]
-                for(start; start <= end; start++){
-                    arr.push(start)
-                }
-               
-                return  arr
-            },
+import Paginations from "./components/Paginations.vue"
 
-        },
-        computed:{           
-            items(){
+export default {
+    components: {
+   'paginations': Paginations
+  },
+  computed:{
+      items(){
                 return  this.$store.getters.items
             },
             MainGroup(){
                  
                 return this.$store.getters.MainGroup
             },
-            //воврощает колличесво стр.
-            pageCount(){
-                return this.$store.getters.paginations.pageCount
-            },
-            /*currentPage(){
-                return this.$store.getters.paginations.currentPage
-            }   */     
-        },
+  },  
+  methods:{
+      getItemsByMaingroup:(id) =>{
+          console.log(id)
+      }
+  },
         created(){
              
             this.$store.dispatch('asyncGetMainGroup')

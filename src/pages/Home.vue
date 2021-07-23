@@ -236,15 +236,9 @@
             }
         },
         created(){
-         /* this.resource = this.$resource('items/gettop')
-          .get().then(res => res.json()).then(items => {
-              items.items.map( item =>{
-                  //убираем из vendor все  "/"
-                  return item.vendor = item.vendor.replace(new RegExp("/",'g'),"")
-              })
-              this.top = items})*/
+        
               this.$store.dispatch('asyncGetTop')
-              //console.log(this.top)
+              console.log(this.top)
          
         }
 

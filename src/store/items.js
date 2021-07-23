@@ -15,7 +15,7 @@ export default {
         },
 
         setTop(state, payload) {
-            console.log(payload)
+
             state.top = payload
         },
 
@@ -25,9 +25,24 @@ export default {
 
     },
     actions: {
-        asyncGetItems(context, payload = 1) {
+        asyncGetItems(context, payload) {
 
-            Vue.resource(`items?page=${payload}`)
+            if (typeof payload == 'undefined') {
+
+                payload = {
+                    method: '',
+                    page: 1
+                }
+
+            } else if (typeof payload.method == 'undefined') {
+                payload.method = ''
+            } else if (typeof payload.page == 'undefined') {
+                payload.page = 1
+            }
+            const str = `items${payload.method}?page=${payload.page}`
+
+            console.log(str)
+            Vue.resource(str)
                 .get().then(res => res.json()).then(items => {
                     items.items.map(item => {
                         //убираем из vendor все  "/"

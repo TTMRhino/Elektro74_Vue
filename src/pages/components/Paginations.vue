@@ -31,6 +31,7 @@
 
 <script>
     export default {
+        props:['method'],
         data(){
         return{
             currentPage:1,           
@@ -41,16 +42,31 @@
             //переход на конкретную стр.
            movePage:function(page ){
                this.currentPage = page
-                this.$store.dispatch('asyncGetItems',{page})
+              
+                this.$store.dispatch('asyncGetItems',{
+                    page,
+                    method:this.method
+                    })
            },
            //формируем ограниченную пагинацию (выводим не все 30 стр а только по 6 шт.)
-           fromToArr(start,end){
-               if(end > this.pageCount){
+            fromToArr(curPage,end){
+                
+                //если end пришел больше чем колличесво стр приравниваем его к колличесву стр.
+               if(end > this.pageCount ){
                    end = this.pageCount
                }
-                let arr=[]
-                for(start; start <= end; start++){
-                    arr.push(start)
+               
+                let arr=[] 
+
+                //делаем "отступы" в отображении номера стр в пагинации <-1 1 0 1 1->
+                if(this.pageCount > 5){
+                    if(curPage > 2 &&  end  > 4){
+                        curPage -=2                                           
+                    }
+                }else{ curPage = 1 }                   
+
+                for(curPage; curPage <= end; curPage++){
+                    arr.push(curPage)
                 }
                
                 return  arr

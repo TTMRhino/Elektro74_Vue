@@ -23,14 +23,20 @@
                      
                             <li>
                                 <button class="btn btn-link"
-                                 @click="getItemsByMaingroup(mGroup.id)"> 
-                                 {{mGroup.title}} <i class="fa fa-angle-down"></i> </button>
+                                 @click="getItemsByGroup(mGroup.id,'/get-by-maingroup')"> 
+                                    {{mGroup.title}} <i class="fa fa-angle-down"></i> 
+                                 </button>
 
                                 <ul class="ht-dropdown dropdown-style-one">
                                     <li
                                      v-for="sGroup in mGroup.subGroup"
                                     :key="sGroup.id"
-                                    > <a class="btn btn-link" >{{ sGroup.title  }}</a></li>
+                                    > 
+                                    <button class="btn btn-link" 
+                                    @click="getItemsByGroup(sGroup.id,'/get-by-subgroup')"> 
+                                    >
+                                        {{ sGroup.title  }}
+                                    </button></li>
                                 </ul>
                             </li>
                         </ul>
@@ -239,7 +245,7 @@
                                         
                            <!-- PAGINATION -->
                                
-                                <paginations></paginations>
+                                <paginations :method='methodForPagin'></paginations>
                            
 
                             <div class="toolbar-sorter-footer">
@@ -270,6 +276,11 @@ export default {
     components: {
    'paginations': Paginations
   },
+  data(){
+    return{
+        methodForPagin:''
+    }
+  },
   computed:{
       items(){
                 return  this.$store.getters.items
@@ -280,18 +291,20 @@ export default {
             },
   },  
   methods:{
-      getItemsByMaingroup:(id) =>{
-          console.log(id)
+      getItemsByGroup:function(id,str) {
+          
+           str =`${str}?id=${id}`
+          console.log(str)
+          this.methodForPagin = str
+          this.$store.dispatch('asyncGetItems',{method:str})
       }
   },
         created(){
-             
+            //забираем с сервера группы(все) 
             this.$store.dispatch('asyncGetMainGroup')
 
             //обращаемся в store для вытягиваия items через API
              this.$store.dispatch('asyncGetItems') 
-            
-              
              
         }
                 

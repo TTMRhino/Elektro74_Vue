@@ -4,7 +4,9 @@ export default {
     state: {
         items: null,
         top: [],
-        paginations: {}
+        paginations: {},
+        sort: 'item',
+        method: '',
 
     },
     mutations: {
@@ -19,8 +21,16 @@ export default {
             state.top = payload
         },
 
+        //возможно это уже не нужно!
         setCurrentPage(state, payload) {
             state.paginations.currentPage = payload
+        },
+
+        setSort(state, paload) {
+            state.sort = paload
+        },
+        setMethod(state, paload) {
+            state.method = paload
         }
 
     },
@@ -34,17 +44,18 @@ export default {
                 }
             }
 
-            if (typeof payload.method == 'undefined' || payload.method === '') {
-                payload.method = ''
+            if (this.state.items.method === '') {
                 str += '?'
-            } else { str += payload.method + '&' }
+            } else { str += this.state.items.method + '&' }
 
             if (typeof payload.page == 'undefined') {
                 payload.page = 1
                 str += `page=${payload.page}`
             } else { str += `page=${payload.page}` }
 
+            str += `&sort=${this.state.items.sort}`
 
+            console.log(str)
             Vue.resource(str)
                 .get().then(res => res.json()).then(items => {
                     items.items.map(item => {
@@ -82,6 +93,12 @@ export default {
         },
         top(state) {
             return state.top
+        },
+        sort(state) {
+            return state.sort
+        },
+        method(state) {
+            return state.method
         }
     }
 }

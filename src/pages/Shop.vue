@@ -88,26 +88,30 @@
                                     <li><span class="grid-item-list"> товары 1-12 of 13</span></li>
                                 </ul>
                             </div>
-                            <!-- Toolbar Short Area Start -->
+                            <!-- SORT -->
                             <div class="main-toolbar-sorter f-right">
                                 
                                 <div class="toolbar-sorter">
                                     
-                                    <div class="btn-group btn-sort">
-                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        Сортировать <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li><a href="#">Имя</a></li>
-                                            <li><a href="#">Цена</a></li>                                     
-                                        </ul>
-                                    </div>
+                                        <label for="SortFormControlSelect1">Сортировка</label>
+                                        <select class=" sort" 
+                                        id="SortFormControlSelect1"
+                                        v-model="sort"
+                                        
+                                        >
+                                            <option value="item" @click="sortSet(sort)" >Имя</option>
+                                            <option value="price" @click="sortSet(sort)" >Цена</option>  
+
+                                        </select>
+
+                                        <span><a href="#"><i class="fa fa-arrow-up"></i></a></span>
+                                        <span><a href="#"><i class="fa fa-arrow-down"></i></a></span>
+                                    
                                   
-                                    <span><a href="#"><i class="fa fa-arrow-up"></i></a></span>
-                                    <span><a href="#"><i class="fa fa-arrow-down"></i></a></span>
+                                    
                                 </div>
                             </div>
-                            <!-- Toolbar Short Area End -->
+                            <!-- SORT End -->
                         </div>
 
 
@@ -278,7 +282,9 @@ export default {
   },
   data(){
     return{
-        methodForPagin:''
+        methodForPagin:'',
+        sort:'item'
+
     }
   },
   computed:{
@@ -291,12 +297,19 @@ export default {
             },
   },  
   methods:{
-      getItemsByGroup:function(id,str) {
+      getItemsByGroup:function(id,method) {
           
-           str =`${str}?id=${id}`
-          console.log(str)
-          this.methodForPagin = str
-          this.$store.dispatch('asyncGetItems',{method:str})
+           method =`${method}?id=${id}`
+          console.log(method)
+          this.methodForPagin = method
+          this.$store.commit('setMethod', method)
+          this.$store.dispatch('asyncGetItems')
+      },
+      sortSet:function(sort){
+          this.$store.commit('setSort', sort)
+
+
+          this.$store.dispatch('asyncGetItems')
       }
   },
         created(){

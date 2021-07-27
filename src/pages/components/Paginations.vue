@@ -41,7 +41,8 @@
     methods:{
             //переход на конкретную стр.
            movePage:function(page ){
-               this.currentPage = page
+
+                this.currentPage = page
               
                 this.$store.dispatch('asyncGetItems',{
                     page,

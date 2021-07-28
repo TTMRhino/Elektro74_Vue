@@ -18,7 +18,7 @@
                     </div>
                     <ul >
                         <ul class="middle-menu-list menuSideBar"
-                        v-for="mGroup in MainGroup" :key="mGroup.id"
+                        v-for="mGroup in MenuGroup" :key="mGroup.id"
                         >
                      
                             <li>
@@ -41,27 +41,7 @@
                             </li>
                         </ul>
                     </ul>
-                    <!--<ul>
-                        <ul class="middle-menu-list menuSideBar">
-                            <li><a href="/shop/3">
-                                    Насосы<i class="fa fa-angle-down"></i>
-                                </a>                        
-                                <ul class="ht-dropdown dropdown-style-one">   
-                                    <li> <a href="/shop/index?subgroup_id=3">Дренажные</a></li>
-                                    <li> <a href="/shop/index?subgroup_id=4">Насосные станции</a></li>                                    
-                                </ul> 
-                            </li> 
-                        </ul> 
-                    </ul>
-                    <ul class="middle-menu-list menuSideBar">
-                        <li><a href="/shop/4">
-                            Садовая техника<i class="fa fa-angle-down"></i></a>                        
-                            <ul class="ht-dropdown dropdown-style-one">   
-                                <li> <a href="/shop/index?subgroup_id=11">Бензопилы</a></li>
-                                <li> <a href="/shop/index?subgroup_id=12">Электропилы</a></li>
-                            </ul> 
-                        </li> 
-                    </ul> -->
+                    
                 <ul class="middle-menu-list menuSideBar">                    
                 </ul> 
             </div>
@@ -91,25 +71,7 @@
                             <!-- SORT -->
                             <div class="main-toolbar-sorter f-right">
                                 
-                                <div class="toolbar-sorter">
-                                    
-                                        <label for="SortFormControlSelect1">Сортировка</label>
-                                        <select class=" sort" 
-                                        id="SortFormControlSelect1"
-                                        v-model="sort"
-                                        
-                                        >
-                                            <option value="item" @click="sortSet(sort)" >Имя</option>
-                                            <option value="price" @click="sortSet(sort)" >Цена</option>  
-
-                                        </select>
-
-                                        <span><a href="#"><i class="fa fa-arrow-up"></i></a></span>
-                                        <span><a href="#"><i class="fa fa-arrow-down"></i></a></span>
-                                    
-                                  
-                                    
-                                </div>
+                                <sort-panel></sort-panel>
                             </div>
                             <!-- SORT End -->
                         </div>
@@ -134,9 +96,9 @@
                                                 <div class="single-product">
                                                     <!-- Product Image Start -->
                                                     <div class="pro-img">
-                                                        <a href="#">
+                                                        <router-link :to="{path:'detail', params:{id: item.id}}">
                                                             <img class="primary-img" :src="'/img/products/l'+ item.vendor +'.jpg'" alt="#">                                                           
-                                                        </a>
+                                                        </router-link>
                                                     </div>
                                                     <!-- Product Image End -->
                                                     <!-- Product Content Start -->
@@ -192,10 +154,19 @@
                                         >
                                             <!-- Product Image Start -->
                                             <div class="pro-img">
-                                                <a href="#">
+                                                <router-link :to="{ name:'detail', params:{ id:item.id }, 
+                                                query: { 
+                                                    img: '/img/products/l'+ item.vendor +'.jpg',
+                                                    price: item.price,
+                                                    oldPrice: item.old_price,
+                                                    name: item.item,                                                    
+                                                    description: item.description,
+                                                    maingroup: item.maingroup_id,
+                                                    subgroup: item.subgroup_id
+                                                 }}">
                                                     <img class="primary-img" :src="'/img/products/l'+ item.vendor +'.jpg'" alt="#">
                                                     <!--<img class="secondary-img" src="/img/products/2.jpg" alt="">-->
-                                                </a>
+                                                </router-link>
                                             </div>
                                             <!-- Product Image End -->
                                             <!-- Product Content Start -->
@@ -275,15 +246,15 @@
 </template>
 <script>
 import Paginations from "./components/Paginations.vue"
-
+import SortPanel from "./components/SortPanel.vue"
 export default {
     components: {
-   'paginations': Paginations
+   'paginations': Paginations,
+   'sort-panel':SortPanel
   },
   data(){
     return{
-        methodForPagin:'',
-        sort:'item'
+        methodForPagin:'',        
 
     }
   },
@@ -291,9 +262,9 @@ export default {
       items(){
                 return  this.$store.getters.items
             },
-            MainGroup(){
+            MenuGroup(){
                  
-                return this.$store.getters.MainGroup
+                return this.$store.getters.MenuGroup
             },
   },  
   methods:{
@@ -305,16 +276,16 @@ export default {
           this.$store.commit('setMethod', method)
           this.$store.dispatch('asyncGetItems')
       },
-      sortSet:function(sort){
+      sortSet:function(sort){           
+
           this.$store.commit('setSort', sort)
-
-
           this.$store.dispatch('asyncGetItems')
-      }
+      },
+     
   },
         created(){
             //забираем с сервера группы(все) 
-            this.$store.dispatch('asyncGetMainGroup')
+            this.$store.dispatch('asyncGetMenuGroup')
 
             //обращаемся в store для вытягиваия items через API
              this.$store.dispatch('asyncGetItems') 

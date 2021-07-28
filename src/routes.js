@@ -1,8 +1,10 @@
 import VueRouter from "vue-router";
-import Home from "./pages/Home.vue"
+import Home from "./pages/Home.vue";
+
+//import { resolve } from "url";
 //import About from "./pages/About.vue"
 //import Contacts from "./pages/Contacts.vue"
-
+//import Detail from "./pages/Detail.vue"
 const About = resolve => {
     require.ensure(['./pages/About.vue'], () => {
         resolve(
@@ -26,6 +28,14 @@ const Shop = resolve => {
         )
     })
 }
+
+const Detail = resolve => {
+    require.ensure(['./pages/Detail.vue'], () => {
+        resolve(
+            require('./pages/Detail.vue')
+        )
+    })
+}
 export default new VueRouter({
     routes: [{
             path: '/',
@@ -42,6 +52,11 @@ export default new VueRouter({
         {
             path: '/shop',
             component: Shop
+        },
+        {
+            path: '/detail/:id',
+            name: "detail",
+            component: Detail
         }
     ],
     mode: 'history'

@@ -2,15 +2,20 @@ import Vue from 'vue'
 
 export default {
     state: {
-        mainGroups: null
+        menuGroups: null,
+        mainGroup: null
+
     },
     mutations: {
-        setMainGroup(state, payload) {
-            state.mainGroups = payload
+        setMenuGroup(state, payload) {
+            state.menuGroups = payload
+        },
+        setMainGroup(state, paload) {
+            state.mainGroup = paload
         }
     },
     actions: {
-        asyncGetMainGroup(context) {
+        asyncGetMenuGroup(context) {
 
             //вспомогательная фунсция для меню Асинхронно добавляет подменю (если ее убрать работаь будет но появляется куча ошибок в логах)
             async function getSubMenu(item) {
@@ -20,23 +25,33 @@ export default {
 
 
             Vue.resource('maingroup')
-                .get().then(res => res.json()).then(mainGroup => {
+                .get().then(res => res.json()).then(menuGroup => {
 
-                    mainGroup.forEach(item => {
+                    menuGroup.forEach(item => {
                         item.subGroup = getSubMenu(item)
 
                     });
 
                     //this.$store.dispatch('asyncGetMainGroup', mainGroup) 
-                    context.commit('setMainGroup', mainGroup)
+                    context.commit('setMenuGroup', menuGroup)
                 })
 
+        },
+
+        asyncGetMainGroupById(context, { id }) {
+            Vue.resource(`maingroup/${id}`)
+                .get().then(res => res.json()).then(res => {
+                    context.commit('', res)
+                })
         }
 
     },
     getters: {
+        MenuGroup(state) {
+            return state.menuGroups
+        },
         MainGroup(state) {
-            return state.mainGroups
+            return state.mainGroup
         }
     }
 }

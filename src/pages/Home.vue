@@ -86,9 +86,13 @@
                     <div class="single-product">
                         <!-- Product Image Start -->
                         <div class="pro-img">
-                            <a href="#">
+                            <router-link 
+                            :to="{ name:'detail', params:{ id:item.id }, 
+                                query: { img: '/img/products/l'+ item.vendor +'.jpg' }}">
+
                                 <img class="primary-img" :src="'img/products/l'+ item.vendor +'.jpg'" alt="single-product">
-                            </a>
+                            </router-link>
+
                         </div>
                         <!-- Product Image End -->
                         <!-- Product Content Start -->
@@ -97,7 +101,13 @@
                                 <!-- тут был рейтинг -->
                             </div>
                             <h4>Сезонный товар</h4>
-                            <h4> <a href="#">{{ item.item }}</a></h4>
+                            <h4>  
+                                <router-link 
+                                    :to="{ name:'detail', params:{ id:item.id }, 
+                                        query: { img: '/img/products/l'+ item.vendor +'.jpg' }}">
+                                        {{ item.item }} 
+                                        </router-link>
+                            </h4>
                             <p>
                                 <span class="price"> {{ item.price }} р.</span>
 

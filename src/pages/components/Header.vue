@@ -73,7 +73,13 @@
                             <div class="cart-box text-right">
                                 <ul id="cartBox">
 
-                                    <li><a href="/cart/index"><i class="fa fa-shopping-basket"></i><span class="cart-counter">0</span></a>
+                                    <li>
+                                        
+                                        <router-link to="/cart">
+                                            <i class="fa fa-shopping-basket"></i>
+                                            <span class="cart-counter">0</span>
+                                        </router-link>
+
                                         <ul class="ht-dropdown main-cart-box">
                                             <li>
 
@@ -83,7 +89,7 @@
                                                 <div class="cart-footer fix">
                                                     <h5>итого :<span class="f-right">0р.</span></h5>
                                                     <div class="cart-actions">
-                                                        <a class="checkout" href="/cart/index">Корзина</a>
+                                                        <router-link class="checkout" to="/cart">Корзина</router-link>
                                                     </div>
                                                 </div>
                                                 <!-- Cart Footer Inner End -->

@@ -155,15 +155,7 @@
                                             <!-- Product Image Start -->
                                             <div class="pro-img">
                                                 <router-link :to="{ name:'detail', params:{ id:item.id }, 
-                                                query: { 
-                                                    img: '/img/products/l'+ item.vendor +'.jpg',
-                                                    price: item.price,
-                                                    oldPrice: item.old_price,
-                                                    name: item.item,                                                    
-                                                    description: item.description,
-                                                    maingroup: item.maingroup_id,
-                                                    subgroup: item.subgroup_id
-                                                 }}">
+                                                query: { img: '/img/products/l'+ item.vendor +'.jpg' }}">
                                                     <img class="primary-img" :src="'/img/products/l'+ item.vendor +'.jpg'" alt="#">
                                                     <!--<img class="secondary-img" src="/img/products/2.jpg" alt="">-->
                                                 </router-link>
@@ -178,7 +170,13 @@
                                                     <i class="fa fa-star"></i>
                                                     <i class="fa fa-star"></i>
                                                 </div>                                
-                                                <h4><a href="#">{{ item.item}} </a></h4>
+                                                <h4>
+                                                    <router-link 
+                                                        :to="{ name:'detail', params:{ id:item.id }, 
+                                                            query: { img: '/img/products/l'+ item.vendor +'.jpg' }}">
+                                                        {{ item.item}} 
+                                                    </router-link>
+                                                </h4>
                                                 <p>
                                                     <span class="price"> {{ item.price }} р.</span>
                                                    
@@ -192,7 +190,9 @@
                                                         <!--<a href="wishlist.html" data-toggle="tooltip" title="Add to Wishlist"><i class="fa fa-heart"></i></a>-->
                                                         <a class="add-cart add-to-cart" href="#"
                                                         data-id="#"
-                                                         data-toggle="tooltip" title="Add to Cart">В корзину</a>
+                                                         data-toggle="tooltip" title="Add to Cart"
+                                                         @click="addItemToCart(item)"
+                                                         >В корзину</a>
                                                        
                                                     </div>
                                                 </div>
@@ -281,6 +281,10 @@ export default {
           this.$store.commit('setSort', sort)
           this.$store.dispatch('asyncGetItems')
       },
+      addItemToCart(item){
+          
+          this.$store.dispatch('addToCart',{item})
+      }
      
   },
         created(){

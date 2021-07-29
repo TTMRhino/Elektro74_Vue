@@ -5,6 +5,9 @@ import Home from "./pages/Home.vue";
 //import About from "./pages/About.vue"
 //import Contacts from "./pages/Contacts.vue"
 //import Detail from "./pages/Detail.vue"
+import Cart from "./pages/Cart.vue"
+
+
 const About = resolve => {
     require.ensure(['./pages/About.vue'], () => {
         resolve(
@@ -57,6 +60,11 @@ export default new VueRouter({
             path: '/detail/:id',
             name: "detail",
             component: Detail
+        },
+        {
+            path: '/cart',
+            name: "cart",
+            component: Cart
         }
     ],
     mode: 'history'

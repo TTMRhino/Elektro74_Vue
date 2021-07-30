@@ -9,7 +9,9 @@
 
                    if(!empty($_SESSION['cart'])): 
                         <!-- Form Start -->
-                        <form action="#" id="table">
+                        <form action="#" id="table"
+                         v-if="items.length > 0"
+                        >
                             <!-- Table Content Start -->
                             <div class="table-content table-responsive mb-50" >
                                 <div class="cart-table">
@@ -30,31 +32,52 @@
                                         <tbody>
 
                                         <!-- FOREACH session cart -->
-                                            <tr>
+                                            <tr 
+                                            v-for="item in items"
+                                            :key=item.id
+                                            >
                                                 <td class="product-thumbnail">
-                                                    <a href="/img/products/l<?= $item['clearVendor']?>.jpg" data-fancybox="images">
-                                                        <img src="/img/products/l<?= $item['clearVendor']?>.jpg" alt="cart-image" />
-                                                    </a>
+                                                    
+                                                    <router-link 
+                                                        :to="{ name:'detail', params:{ id:item.id }, 
+                                                            query: { img: item.img }}">
+                                                        <img :src="item.img" alt="cart-image" />
+                                                    </router-link>
+
                                                 </td>
                                                 <td class="product-name">
-                                                    <a href="<?= Url::to(['product/view', 'vendor' => $item['vendor']]) ?>">
-                                                         $item['title'] 
-                                                    </a>
+                                                  
+                                                     <router-link 
+                                                        :to="{ name:'detail', params:{ id:item.id }, 
+                                                            query: { img: item.img }}">
+                                                         {{ item.item }}
+                                                    </router-link>
                                                 </td>
-                                                <td class="product-price"><span class="amount"> $item['price'] р.</span></td>
+                                                <td class="product-price"><span class="amount"> {{ item.price }} р.</span></td>
 
                                                 <td class="product-quantity" >
-                                                    <button type="button" data-qty="-1" data-id="<?= $item['id']?>" class="btn btn-light minus">-</button>
+                                                    <button type="button"  
+                                                    class="btn btn-light minus"
+                                                    @click="changeQuantity(item.id,-1)"
+                                                    >-</button>
                                                         <input id="count<?= $item['id'] ?>" disabled
-                                                            data-id="<?= $item['id']?>"
-                                                            type="text" value="<?= $item['qty'] ?>" />
-                                                    <button type="button"  class="btn btn-light plus" data-qty="1" data-id="<?= $item['id']?>">+</button>                                                
+                                                           
+                                                            type="text" :value="item.quantity" />
+                                                    <button type="button"  
+                                                    class="btn btn-light plus"
+                                                    @click="changeQuantity(item.id,1)"
+                                                    >+</button>                                                
                                                 </td>
 
-                                                <td class="product-subtotal"> $item['price'] * $item['qty'] </td>
+                                                <td class="product-subtotal"> {{ item.quantity * item.price }} </td>
                                                 <td class="product-remove " > 
-                                                <a href="<?= Url::to(['cart/del-item', 'id'=>$item['id'] ]) ?>" 
-                                                    class="delete" data-id="<?= $item['id'] ?>"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                <button 
+                                                     type="button"
+                                                     class="delete btn btn-link" 
+                                                     @click="deleteItem(item.id)"
+                                                     >
+                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                </button>
                                                 </td>
                                             </tr>
                                         <!-- END Foreach SESSION cart -->
@@ -86,7 +109,7 @@
                                                 <tr class="order-total">
                                                     <th>Всего:</th>
                                                     <td>
-                                                        <strong><span class="amount"> $_SESSION['cart.sum']  руб.</span></strong>
+                                                        <strong><span class="amount"> {{ totalSum }}  руб.</span></strong>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -101,9 +124,9 @@
                             <!-- Row End -->
                         </form>
                         <!-- Form End -->
-                     else: 
-                        <h3>Корзина пуста.</h3>
-        php endif ?>
+                  
+                        <h3 v-else>Корзина пуста.</h3>
+       
                     </div>
                 </div>
                  <!-- Row End -->
@@ -118,8 +141,27 @@
 export default {
     data(){
         return{
-
+            items:this.$store.getters.getCartItems
         }
     },
+    computed:{
+        totalQuantity(){
+            return this.$store.getters.totalQuantity
+        },
+        totalSum(){
+            return this.$store.getters.totalSum
+        }
+    },
+    methods:{
+        changeQuantity(id,val){
+            //TO DO ......
+            console.log(`QUANTITY ${val}`)
+        },
+
+        deleteItem(id){
+        console.log(`DELTE ${id}`)
+    }
+    },
+    
 }
 </script>

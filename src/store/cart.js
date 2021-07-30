@@ -1,6 +1,16 @@
 //import Vue from 'vue'
+function countCart(state) {
+    state.cart.totalQuantity = 0
+    state.cart.totalSum = 0
 
+    state.cart.items.map(function(item) {
+        state.cart.totalQuantity += item.quantity
+        state.cart.totalSum += item.price * item.quantity
+    })
+
+}
 export default {
+
     state: {
         cart: {
             items: [],
@@ -16,7 +26,9 @@ export default {
 
         }
     },
+
     mutations: {
+
         setItemToCart(state, { item }) {
             console.log(item.id)
 
@@ -27,16 +39,31 @@ export default {
             if (idx === -1) {
                 state.cart.items.push({
                     id: item.id,
+                    img: '/img/products/l' + item.vendor + '.jpg',
                     item: item.item,
                     price: item.price,
                     quantity: 1
                 })
+
             } else {
                 state.cart.items[idx].quantity += 1
             }
 
+
+            countCart(state)
+
             console.log(state.cart)
         }
     },
-    getters: {}
+    getters: {
+        totalQuantity(state) {
+            return state.cart.totalQuantity
+        },
+        totalSum(state) {
+            return state.cart.totalSum
+        },
+        getCartItems(state) {
+            return state.cart.items
+        }
+    }
 }

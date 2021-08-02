@@ -39,6 +39,14 @@ const Detail = resolve => {
         )
     })
 }
+
+const Checkout = resolve => {
+    require.ensure(['./pages/Checkout.vue'], () => {
+        resolve(
+            require('./pages/Checkout.vue')
+        )
+    })
+}
 export default new VueRouter({
     routes: [{
             path: '/',
@@ -65,6 +73,11 @@ export default new VueRouter({
             path: '/cart',
             name: "cart",
             component: Cart
+        },
+        {
+            path: '/checkout',
+            name: "checkout",
+            component: Checkout
         }
     ],
     mode: 'history'

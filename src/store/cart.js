@@ -9,6 +9,14 @@ function countCart(state) {
     })
 
 }
+
+function delItemFromCart(state, item) {
+    const idx = state.cart.items.findIndex(item1 => item1.id === item.id)
+    console.log(`УДАЛЯЕМ ${item} idx = ${idx}`)
+
+    state.cart.items.splice(idx, 1)
+    countCart(state)
+}
 export default {
 
     state: {
@@ -24,13 +32,19 @@ export default {
             console.log(paload)
             context.commit('setItemToCart', paload)
 
+        },
+        deleteItemFromCart(context, paload) {
+            //удаляе элемент ссылаясь на функцию (method)-> далее на внешнию функцию удаление (она нужна что бы не дублировать код)
+            context.commit('delItemFromCart', paload)
+
         }
+
     },
 
     mutations: {
 
-        setItemToCart(state, { item }) {
-            console.log(item.id)
+        setItemToCart(state, { item, quantity = 1 }) {
+            console.log(`item = ${item.item} q = ${quantity}`)
 
             const idx = state.cart.items.findIndex(item1 => item1.id === item.id)
 
@@ -42,18 +56,23 @@ export default {
                     img: '/img/products/l' + item.vendor + '.jpg',
                     item: item.item,
                     price: item.price,
-                    quantity: 1
+                    quantity: quantity
                 })
 
             } else {
-                state.cart.items[idx].quantity += 1
+
+                state.cart.items[idx].quantity += quantity
+                state.cart.items[idx].quantity === 0 ? delItemFromCart(state, state.cart.items[idx].item) : ''
             }
-
-
             countCart(state)
-
             console.log(state.cart)
+        },
+
+        delItemFromCart(state, { item }) {
+            //удалени происходит во внешней функции для того чтобы не дублировать код
+            delItemFromCart(state, item)
         }
+
     },
     getters: {
         totalQuantity(state) {

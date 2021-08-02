@@ -58,14 +58,14 @@
                                                 <td class="product-quantity" >
                                                     <button type="button"  
                                                     class="btn btn-light minus"
-                                                    @click="changeQuantity(item.id,-1)"
+                                                    @click="changeQuantity(item,-1)"
                                                     >-</button>
                                                         <input id="count<?= $item['id'] ?>" disabled
                                                            
                                                             type="text" :value="item.quantity" />
                                                     <button type="button"  
                                                     class="btn btn-light plus"
-                                                    @click="changeQuantity(item.id,1)"
+                                                    @click="changeQuantity(item,1)"
                                                     >+</button>                                                
                                                 </td>
 
@@ -74,7 +74,7 @@
                                                 <button 
                                                      type="button"
                                                      class="delete btn btn-link" 
-                                                     @click="deleteItem(item.id)"
+                                                     @click="deleteItem(item)"
                                                      >
                                                     <i class="fa fa-times" aria-hidden="true"></i>
                                                 </button>
@@ -115,7 +115,7 @@
                                             </tbody>
                                         </table>
                                         <div class="wc-proceed-to-checkout">
-                                            <a href="<?= Url::to('checkout') ?>">Оформить заказ</a>
+                                            <router-link to="/checkout">Оформить заказ</router-link>
                                         </div>
                                     </div>
                                 </div>
@@ -153,14 +153,19 @@ export default {
         }
     },
     methods:{
-        changeQuantity(id,val){
+        changeQuantity(item,quantity){
             //TO DO ......
-            console.log(`QUANTITY ${val}`)
+            console.log(`QUANTITY ${quantity} id= ${item.item}`)
+            this.$store.dispatch('addToCart',{item, quantity})
         },
 
-        deleteItem(id){
-        console.log(`DELTE ${id}`)
-    }
+        deleteItem(item){           
+            this.$store.dispatch('deleteItemFromCart',{item})
+      
+        },
+
+
+
     },
     
 }

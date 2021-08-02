@@ -144,8 +144,22 @@
                                 <!-- LIST VIEW  -->
                                 <!-- #grid view End -->
                                
+                                    <div 
+                                    v-if="loading"
+                                    class="media">
 
-                                <div id="list-view" class="tab-pane active">
+                                        <div class="media-body">
+                                            <HourGlass class="mt-0" 
+                                            style="text-align:center;margin-left:auto; margin-right:auto; color:red"
+                                            ></HourGlass>
+                                        
+                                        </div>
+                                    </div>
+
+                                <div 
+                                v-else
+                                 id="list-view" class="tab-pane active">
+                                    
 
                                     <!-- START FOREACH ITEMS -->
                                         <div class="single-product"
@@ -247,10 +261,12 @@
 <script>
 import Paginations from "./components/Paginations.vue"
 import SortPanel from "./components/SortPanel.vue"
+import {HourGlass} from 'vue-loading-spinner'
 export default {
     components: {
    'paginations': Paginations,
-   'sort-panel':SortPanel
+   'sort-panel':SortPanel,
+    HourGlass
   },
   data(){
     return{
@@ -266,6 +282,9 @@ export default {
                  
                 return this.$store.getters.MenuGroup
             },
+            loading(){              
+                return this.$store.getters.loading
+            }
   },  
   methods:{
       getItemsByGroup:function(id,method) {

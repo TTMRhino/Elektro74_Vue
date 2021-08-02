@@ -59,10 +59,12 @@
                             </div>
                             
                             <div class="box-quantity">
-                                <form action="#">
+                               
                                   
-                                    <a class="add-cart" href="<?= Url::to(['cart/add','id'=>$item->id]) ?>">в корзину</a>
-                                </form>
+                                    <button 
+                                     @click="addItemToCart(item)"
+                                    class="add-cart" >в корзину</button>
+                                
                             </div>
                             
                             <p class="ptb-20">{{ item.description }} </p>
@@ -109,6 +111,9 @@ export default {
      
   },
   methods:{
+      addItemToCart(item){
+           this.$store.dispatch('addToCart',{item})
+      },
        subGroup(id){          
          this.$resource(`subgroup/${id}`)
             .get().then(res => res.json()).

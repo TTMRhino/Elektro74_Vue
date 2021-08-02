@@ -7,6 +7,7 @@ export default {
         paginations: {},
         sort: 'item',
         method: '',
+        loading: 'false'
 
     },
     mutations: {
@@ -31,12 +32,18 @@ export default {
         },
         setMethod(state, paload) {
             state.method = paload
+        },
+
+        setLoading(state, paload) {
+            state.loading = paload
         }
 
     },
     actions: {
-        asyncGetItems(context, payload) {
+        async asyncGetItems(context, payload) {
             let str = `items`
+
+            context.commit('setLoading', true)
 
             if (typeof payload == 'undefined') {
                 payload = {
@@ -56,16 +63,22 @@ export default {
             str += `&sort=${this.state.items.sort}`
 
             console.log(str)
-            Vue.resource(str)
-                .get().then(res => res.json()).then(items => {
-                    items.items.map(item => {
-                        //убираем из vendor все  "/"
-                        return item.vendor = item.vendor.replace(new RegExp("/", 'g'), "")
-                    })
+            try {
+                Vue.resource(str)
+                    .get().then(res => res.json()).then(items => {
+                        items.items.map(item => {
+                            //убираем из vendor все  "/"
+                            return item.vendor = item.vendor.replace(new RegExp("/", 'g'), "")
+                        })
 
-                    //помещаем items в store              
-                    context.commit('setItems', items)
-                })
+                        //помещаем items в store              
+                        context.commit('setItems', items)
+                        context.commit('setLoading', false)
+                    })
+            } catch (error) {
+                context.commit('setLoading', false)
+                throw (error)
+            }
 
 
 
@@ -101,6 +114,9 @@ export default {
         },
         method(state) {
             return state.method
+        },
+        loading(state) {
+            return state.loading
         }
     }
 }

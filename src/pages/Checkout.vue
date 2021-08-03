@@ -11,39 +11,82 @@
                         
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Имя</label>
-                                    <input  class="form-control" id="exampleInputPassword1" placeholder="Имя">
+                                    <input  class="form-control" 
+                                    id="exampleInputPassword1" 
+                                    placeholder="Имя"
+                                    v-model="name"
+                                    :class="{'is-invalid':$v.name.$error}"
+                                    @blur="$v.name.$touch()">
+                                    <div class="invalid-feedback">
+                                        Не корректное имя
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="InputPhone1">Телефон</label>
-                                    <input  class="form-control" id="InputPhone1" placeholder="Телефон">
+                                    <input  class="form-control" 
+                                    id="InputPhone1" 
+                                    placeholder="Телефон"
+                                    :class="{'is-invalid':$v.phone.$error}"
+                                    v-model="phone"
+                                    @blur="$v.phone.$touch()">
+                                     
+                                    <div class="invalid-feedback">
+                                        Не корректый телефон
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="InputIndex">Почтовый индекс</label>
-                                    <input  class="form-control" id="InputIndex" placeholder="Почтовый индекс">
+                                    <input  class="form-control" 
+                                    id="InputIndex" 
+                                    placeholder="Почтовый индекс"
+                                    v-model="mailIndex"
+                                    :class="{'is-invalid':$v.mailIndex.$error}"
+                                    @blur="$v.mailIndex.$touch()">
+
+                                    <div class="invalid-feedback">
+                                        Не корректый индекс
+                                    </div>
                                 </div>                            
 
                                 <div class="form-group">
                                     <label for="InputCity">Город</label>
-                                    <input class="form-control" id="InputCity" aria-describedby="Введите город" placeholder="Город">
-                                    <small id="Введите город" class="form-text text-muted"></small>
+                                    <input class="form-control" 
+                                    id="InputCity" 
+                                    aria-describedby="Введите город" 
+                                    placeholder="Город"
+                                    v-model="city"
+                                    :class="{'is-invalid':$v.city.$error}"
+                                    @blur="$v.city.$touch()">
+                                    
+                                   
+                                    <div class="invalid-feedback">
+                                        Не корректый Город
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="InputAdres1">Адрес</label>
-                                    <input  class="form-control" id="InputAdres1" aria-describedby="InputAdres" placeholder="Адрес">
-                                    <small id="InputAdres" class="form-text text-muted"></small>
+                                    <input  class="form-control" 
+                                    id="InputAdres1" 
+                                    aria-describedby="InputAdres" 
+                                    placeholder="Адрес"
+                                    v-model="adress"
+                                    :class="{'is-invalid':$v.adress.$error}"
+                                    @blur="$v.adress.$touch()">
+                                    
+                                    <div class="invalid-feedback">
+                                        Не корректый Адресс
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Коментарий</label>
                                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                 </div>
-                            
-                                
                         
-                                
+                               
                         </div>
                         
                         <div class="col-lg-6 col-md-6">
@@ -107,7 +150,11 @@
                                                     
                                                     </div>
                                                     <div class="order-button-payment">                                            
-                                                    <button type="button" class="btn btn-warning">Заказать</button> 
+                                                    <button type="submit" 
+                                                    class="btn btn-warning"
+                                                    @click="setOrder()"
+                                                    :disabled="$v.$invalid">Заказать</button> 
+                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -124,10 +171,47 @@
 </template>
 
 <script>
+import { required,maxLength,minLength,numeric } from 'vuelidate/lib/validators'
+
 export default {
     data(){
         return{
-            items:this.$store.getters.getCartItems
+            items:this.$store.getters.getCartItems,
+            
+                name:'',
+                phone:'',
+                mailIndex:'',
+                city:'',
+                adress:''
+            
+        }
+    },
+    validations:{
+        name:{
+            required,
+            minLength:minLength(3),
+            maxLength:maxLength(20)           
+        },
+        phone:{
+          required,          
+            minLength:minLength(3),
+            maxLength:maxLength(20),
+            numeric   
+        },
+        mailIndex:{
+            required,
+            minLength:minLength(3),
+            maxLength:maxLength(20),
+        },
+        city:{
+            required,
+            minLength:minLength(3),
+            maxLength:maxLength(20),
+        },
+        adress:{
+            required,
+            minLength:minLength(5),
+            maxLength:maxLength(20),
         }
     },
     computed:{
@@ -138,5 +222,23 @@ export default {
             return this.$store.getters.totalSum
         }
     },
+    methods:{
+        setOrder:function(){
+            console.log("SET ORDER")
+            console.log(this.items)
+            let order ={}
+            order.name = this.name
+            order.phone = this.phone
+            order.adress = this.adress
+            order.mailindex = this.mailIndex
+            order.city = this.city
+
+             let resource = this.$resource('customers')
+             const ansver = resource.save({},order)
+
+           
+                console.log(ansver)
+        }
+    }
 }
 </script>

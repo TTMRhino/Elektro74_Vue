@@ -152,7 +152,7 @@
                                                     <div class="order-button-payment">                                            
                                                     <button type="submit" 
                                                     class="btn btn-warning"
-                                                    @click="setOrder()"
+                                                    @click="setCustomer()"
                                                     :disabled="$v.$invalid">Заказать</button> 
                                                     
                                                     </div>
@@ -223,9 +223,9 @@ export default {
         }
     },
     methods:{
-        setOrder:function(){
+        setCustomer:function(){
             console.log("SET ORDER")
-            console.log(this.items)
+            
             let order ={}
             order.name = this.name
             order.phone = this.phone
@@ -233,11 +233,32 @@ export default {
             order.mailindex = this.mailIndex
             order.city = this.city
 
-             let resource = this.$resource('customers')
-             const ansver = resource.save({},order)
+             const resource = this.$resource('customers')
+             resource.save({},order).then(res => {
+                 this.setOrder(res.body.id)
+             })
 
-           
-                console.log(ansver)
+             
+        },
+        setOrder(customerId){
+            const resource = this.$resource('order')
+            let order ={}
+            this.items.map(item =>{
+                order ={
+                    item: item.item,
+                    item_id: item.id,
+                    quantity: item.quantity,
+                    customers_id: customerId,
+                    price:item.price,
+                    total: item.price * item.quantity
+                }
+                    console.log(order)
+                 resource.save({},order).then(()=>{
+                     //clearCart
+                      this.$store.dispatch('clearCart')
+                      this.$router.push('/orderdone')
+                 })
+            })
         }
     }
 }

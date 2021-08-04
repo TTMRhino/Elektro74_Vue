@@ -6,6 +6,7 @@ import Home from "./pages/Home.vue";
 //import Contacts from "./pages/Contacts.vue"
 //import Detail from "./pages/Detail.vue"
 import Cart from "./pages/Cart.vue"
+import Orderdone from "./pages/Orderdone.vue"
 
 
 const About = resolve => {
@@ -78,6 +79,11 @@ export default new VueRouter({
             path: '/checkout',
             name: "checkout",
             component: Checkout
+        },
+        {
+            path: '/orderdone',
+            name: "orderdone",
+            component: Orderdone
         }
     ],
     mode: 'history'
